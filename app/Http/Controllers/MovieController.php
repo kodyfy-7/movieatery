@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+
 use App\Models\Movie;
 use App\Http\Requests\StoreMovieRequest;
 use App\Http\Requests\UpdateMovieRequest;
 use App\Models\Category;
+use App\Models\Comment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -21,7 +23,8 @@ class MovieController extends Controller
      */
     public function index()
     {
-        return view('movie.index');
+        $movies = Movie::orderBy('created_at', 'DESC')->get();
+        return view('movie.index', ['movies' => $movies]);
     }
 
     /**
@@ -33,7 +36,7 @@ class MovieController extends Controller
     {
         $movie = new Movie();
         $categories = Category::get();
-        return view('user.movie.create', [
+        return view('movie.create', [
             'movie' => $movie,
             'categories' => $categories
         ]);
@@ -86,7 +89,13 @@ class MovieController extends Controller
      */
     public function show(Movie $movie)
     {
-        //
+        //return $movie;
+        $related_posts = Movie::where('id', '<>', $movie->id)->where('category_id', '=', $movie->category_id)->inRandomOrder()->take(3)->get();
+        $movie = Movie::with(['comments' => function($query){ $query->orderBy('created_at', 'DESC');} ])->whereId($movie->id)->first();
+        return view('movie.show', [
+            'movie' => $movie,
+            'related_posts' => $related_posts
+        ]);
     }
 
     /**
@@ -97,7 +106,11 @@ class MovieController extends Controller
      */
     public function edit(Movie $movie)
     {
-        //
+        $categories = Category::get();
+        return view('movie.edit', [
+            'movie' => $movie,
+            'categories' => $categories
+        ]);
     }
 
     /**
@@ -107,9 +120,42 @@ class MovieController extends Controller
      * @param  \App\Models\Movie  $movie
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateMovieRequest $request, Movie $movie)
+    public function update(Request $request, Movie $movie)
     {
-        //
+        $data = request()->validate([
+            'title' => ['required', 'string'],
+            'body' => ['required', 'string'],
+            'category' => ['required', 'integer'],
+            'image' => ['']
+        ]); 
+
+        if($movie->title != $data['title'])
+        {
+            $slug = Str::slug($data['title']);
+            if(Movie::whereSlug($slug)->exists())
+            {
+                $slug = $slug .'-'. Str::uuid();
+            }
+        }
+
+        if($request->has('image'))
+        { 
+            // Store the image on Cloudinary and return the secure URL
+            $path = cloudinary()->upload($request->file('image')->getRealPath())->getSecurePath();
+        } else {
+            $path = $movie->image;
+        }
+        Movie::whereId($movie->id)->update([
+            'title' => $data['title'],
+            'body' => $data['body'],
+            'category_id' => $data['category'],
+            'is_published' => true,
+            'image' => $path,
+            'user_id' => 1,
+            'slug' => $slug
+        ]);
+
+        return redirect()->back()->with('success', 'Data created successfully.');
     }
 
     /**

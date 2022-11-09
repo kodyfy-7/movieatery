@@ -30,10 +30,12 @@
                             <a class="nav-link" href="about.html">About</a>
                         </li>
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="blogDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Blog</a>
+                            <a class="nav-link dropdown-toggle" href="#" id="blogDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Categories</a>
                             <div class="dropdown-menu" aria-labelledby="blogDropdown">
-                                <a class="dropdown-item" href="blog.html">Blog Archive</a>
-                                <a class="dropdown-item" href="blog-single.html">Blog Post</a>
+                                @foreach ($categories as $category)
+                                    <a class="dropdown-item" href="">{{ $category->title }}</a>
+                                @endforeach
+                                <a class="dropdown-item" href="blog.html"><strong>Show More</strong></a>
                             </div>
                         </li>
                         <li class="nav-item dropdown">
@@ -62,9 +64,90 @@
 
     <main class="blog">
         <div class="container">
-            <h1 class="edica-page-title" data-aos="fade-up">Blog</h1>
+            {{-- <h1 class="edica-page-title" data-aos="fade-up">Blog</h1> --}}
 
             @yield('content')
+            @hasSection('sidebar')
+                    <div class="col-md-4 sidebar" data-aos="fade-left">
+                        <div class="widget widget-post-carousel">
+                            <h5 class="widget-title">Post Lists</h5>
+                            <div class="post-carousel">
+                                <div id="carouselId" class="carousel slide" data-ride="carousel">
+                                    <ol class="carousel-indicators">
+                                        <li data-target="#carouselId" data-slide-to="0" class="active"></li>
+                                        <li data-target="#carouselId" data-slide-to="1"></li>
+                                        <li data-target="#carouselId" data-slide-to="2"></li>
+                                    </ol>
+                                    <div class="carousel-inner" role="listbox">
+                                        <figure class="carousel-item active">
+                                            <img src="{{ asset('front/assets/images/blog_widget_carousel.jpg') }}" alt="First slide">
+                                            <figcaption class="post-title">
+                                                <a href="#!">Front becomes an official Instagram Marketing Partner</a>
+                                            </figcaption>
+                                        </figure>
+                                        <figure class="carousel-item">
+                                                <img src="{{ asset('front/assets/images/blog_7.jpg') }}" alt="First slide">
+                                                <figcaption class="post-title">
+                                                    <a href="#!">Front becomes an official Instagram Marketing Partner</a>
+                                                </figcaption>
+                                        </figure>
+                                        <div class="carousel-item">
+                                                <img src="{{ asset('front/assets/images/blog_5.jpg') }}" alt="First slide">
+                                                <figcaption class="post-title">
+                                                    <a href="#!">Front becomes an official Instagram Marketing Partner</a>
+                                                </figcaption>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="widget widget-post-list">
+                            <h5 class="widget-title">Post List</h5>
+                            <ul class="post-list">
+                                <li class="post">
+                                    <a href="#!" class="post-permalink media">
+                                        <img src="{{ asset('front/assets/images/blog_widget_1.jpg') }}" alt="blog post">
+                                        <div class="media-body">
+                                            <h6 class="post-title">Front becomes an official Instagram Marketing Partner</h6>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li class="post">
+                                    <a href="#!" class="post-permalink media">
+                                        <img src="{{ asset('front/assets/images/blog_widget_2.jpg') }}" alt="blog post">
+                                        <div class="media-body">
+                                            <h6 class="post-title">Front becomes an official Instagram Marketing Partner</h6>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li class="post">
+                                    <a href="#!" class="post-permalink media">
+                                        <img src="{{ asset('front/assets/images/blog_widget_3.jpg') }}" alt="blog post">
+                                        <div class="media-body">
+                                            <h6 class="post-title">Front becomes an official Instagram Marketing Partner</h6>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li class="post">
+                                    <a href="#!" class="post-permalink media">
+                                        <img src="{{ asset('front/assets/images/blog_widget_4.jpg') }}" alt="blog post">
+                                        <div class="media-body">
+                                            <h6 class="post-title">Front becomes an official Instagram Marketing Partner</h6>
+                                        </div>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="widget">
+                            <h5 class="widget-title">Categories</h5>
+                            <img src="{{ asset('front/assets/images/blog_widget_categories.jpg') }}" alt="categories" class="w-100">
+                        </div>
+                    </div>
+                </div>
+ 
+                <div class="clearfix"></div>
+            @endif
+                
 
         </div>
 

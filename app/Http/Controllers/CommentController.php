@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Comment;
 use App\Http\Requests\StoreCommentRequest;
 use App\Http\Requests\UpdateCommentRequest;
+use Illuminate\Http\Request;
 
 class CommentController extends Controller
 {
@@ -34,9 +35,20 @@ class CommentController extends Controller
      * @param  \App\Http\Requests\StoreCommentRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreCommentRequest $request)
+    public function store(Request $request)
     {
-        //
+        $data = request()->validate([
+            'body' => ['required'],
+            'movie_id' => ['required', 'integer']
+        ]); 
+
+        Comment::create([
+            'body' => $data['body'],
+            'movie_id' => $data['movie_id'],
+            'user_id' => auth()->user()->id,
+        ]);
+
+        return redirect()->back()->with('success', 'Data created successfully.');
     }
 
     /**

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\MovieController;
+use App\Http\Controllers\CommentController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -19,6 +20,7 @@ use Illuminate\Support\Facades\Route;
 // Route::post('/', [MovieController::class, 'store']);
 
 Route::resource('movies', MovieController::class);
+Route::resource('comments', CommentController::class);
 
 Route::get('/testing', function () {
     return view('template');
