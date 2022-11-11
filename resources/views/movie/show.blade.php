@@ -9,6 +9,7 @@
         </p>
         <section class="blog-post-featured-img" data-aos="fade-up" data-aos-delay="300">
             <img src="{{  $movie->image  }}" alt="featured image" class="w-100">
+            {{-- <img src="{{  $movie->image ?  $movie->image : 'https://serviceschoolhouse.com/static/media/logo_new.d1db4956.png' }}" alt="featured image" class="w-100"> --}}
         </section>
         <section class="post-content">
             <div class="row">
@@ -18,14 +19,16 @@
                 </div>
                 @if(!Auth::guest())
                     @if(Auth::user()->id == $movie->user_id)
-                    • 
-                        <a href="/movies/{{$movie->id}}/edit" class="btn btn-default">Edit</a>
-                        • 
-                        <form action="{{ route('movies.destroy', $movie->id) }}" method="post" enctype="multipart/form-data">
+
+                    <div class="col-lg-9 mx-auto">
+                        <form action="{{ route('movies.destroy', $movie->id) }}" method="post" enctype="multipart/form-data"> <a class="btn btn-outline-warning" href="/movies/{{$movie->id}}/edit" role="button">Edit</a>
+                       
                             @csrf
                             @method('DELETE')
-                            <button type="submit" class="btn btn-default" data-aos="fade-up" data-aos-delay="300">Delete</button>
+                            <button class="btn btn-outline-danger float-right" data-aos="fade-up"  type="submit" data-aos-delay="300">Button</button>
                         </form>
+                        
+                    </div>
                     @endif
                 @endif
             </div>

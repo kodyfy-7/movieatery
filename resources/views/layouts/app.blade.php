@@ -184,12 +184,8 @@
     <section class="edica-footer-banner-section">
         <div class="container">
             <div class="footer-banner" data-aos="fade-up">
-                <h1 class="banner-title">Download it now.</h1>
-                <div class="banner-btns-wrapper">
-                    <button class="btn btn-success"> <img src="{{ asset('front/assets/images/apple@1x.svg') }}" alt="ios" class="mr-2"> App Store</button>
-                    <button class="btn btn-success"> <img src="{{ asset('front/assets/images/android@1x.svg') }}" alt="android" class="mr-2"> Google Play</button>
-                </div>
-                <p class="banner-text">Add some helper text here to explain the finer details of your <br> product or service.</p>
+                <h1 class="banner-title">Random Quotes.</h1>
+                <p class="banner-text">You could not live with your own failure. Where did that bring you, back to me.</p>
             </div>
         </div>
     </section>

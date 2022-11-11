@@ -52,6 +52,11 @@
                 @empty
                     
                 @endforelse
+
+                
+            </div>
+            <div class="row blog-post-row">
+                {{ $movies->links() }}
             </div>
         </section>
     </div>

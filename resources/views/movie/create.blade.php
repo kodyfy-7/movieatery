@@ -4,10 +4,12 @@
         <div class="row">
             
                 <div class="col-md-12 contact-form-wrapper">
-                    <form action="{{ route('movies.store') }}" method="post" enctype="multipart/form-data">
-                        @csrf
-                        @include('user.movie.partials.form')
-                    </form>
+                    {!! Form::open(['route' => 'movies.store', 'method' =>'POST', 'enctype' => 'multipart/form-data']) !!}
+                    {{-- <form action="{{ route('movies.store') }}" method="post" enctype="multipart/form-data">
+                        @csrf  --}}
+                        @include('movie.partials.form')
+                    {{-- </form> --}}
+                    {!! Form::close() !!}
                 </div>
             
             

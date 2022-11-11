@@ -24,8 +24,8 @@ class MovieController extends Controller
     public function index()
     {
         return view('movie.index', [
-            'movies' => Movie::latest()->filter(request(['tag', 'search']))->paginate(6)
-        ]);
+            'movies' => Movie::latest()->filter(request(['tag', 'search']))->paginate(3)
+        ]);/**/
     }
 
     /**
@@ -55,8 +55,16 @@ class MovieController extends Controller
             'title' => ['required', 'string'],
             'body' => ['required', 'string'],
             'category' => ['required', 'integer'],
+            'publish' => [''],
             'image' => ['']
         ]); 
+        $publish = $request->boolean('publish');
+        // if($request->publish)
+        // {
+        //     $publish = true;
+        // } else{
+        //     $publish = false;
+        // }
 
         $slug = Str::slug($data['title']);
         if(Movie::whereSlug($slug)->exists())
@@ -73,14 +81,15 @@ class MovieController extends Controller
             'title' => $data['title'],
             'body' => $data['body'],
             'category_id' => $data['category'],
-            'is_published' => true,
+            'is_published' => $publish,
             'image' => $path,
-            'user_id' => 1,
+            'user_id' => auth()->user()->id,
             'slug' => $slug
         ]);
 
         return redirect()->back()->with('success', 'Data created successfully.');
     }
+
 
     /**
      * Display the specified resource.

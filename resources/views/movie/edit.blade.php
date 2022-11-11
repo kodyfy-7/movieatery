@@ -7,10 +7,14 @@
                     <form action="{{ route('movies.update',$movie->id) }}" method="post" enctype="multipart/form-data">
                         @csrf
                         @method('PUT')
-                        @include('user.movie.partials.form')
+                        @include('movie.partials.form')
                     </form>
                 </div>
-            
+                {{-- {!! Form::open(['route' => ['employees.update', $employee->id], 'method' =>'POST', 'enctype' => 'multipart/form-data']) !!}
+                @include('admin.employee.form')
+                
+                {{Form::hidden('_method', 'PUT')}}
+              {!! Form::close() !!} --}}
             
         </div>
     </section>

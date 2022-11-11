@@ -28,7 +28,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        Paginator::useBootstrap();
+        //Paginator::useBootstrapFive();
+         Paginator::useBootstrap();
+        // tailwind.blade
+        //Paginator::defaultView('tailwind');
  
         View::composer('*', function($view)
         {
@@ -37,5 +40,7 @@ class AppServiceProvider extends ServiceProvider
             $posts = Movie::withCount('comments')->having('comments_count', '>', 5)->take(3)->get();
             $view->with('categories', $categories)->with('posts', $posts);
         });
+
+
     }
 }
