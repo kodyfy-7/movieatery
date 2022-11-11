@@ -6,6 +6,7 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Pagination\Paginator;
 //use View;
 use App\Models\Category;
+use App\Models\Movie;
 use Illuminate\Support\Facades\View;
 
 class AppServiceProvider extends ServiceProvider
@@ -31,8 +32,10 @@ class AppServiceProvider extends ServiceProvider
  
         View::composer('*', function($view)
         {
+
             $categories = Category::orderBy('created_at', 'DESC')->get();
-            $view->with('categories', $categories);
+            $posts = Movie::withCount('comments')->having('comments_count', '>', 5)->take(3)->get();
+            $view->with('categories', $categories)->with('posts', $posts);
         });
     }
 }

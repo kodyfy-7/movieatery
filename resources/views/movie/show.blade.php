@@ -47,20 +47,9 @@
                     </div>
                 </section>
                 <section class="comment-section mt-5 mb-5">
-                    <h2 class="section-title mb-5" data-aos="fade-up">Comments</h2>
-                    @foreach ($movie->comments as $comment)
-                        <div class="card mb-2" data-aos="fade-up">
-                            
-                            <div class="card-body">
-                                <h5 class="card-title">{{ $comment->body }}</h5>
-                                <p class="card-text">{{ $comment->user->name }}</p>
-                            </div>
-                        </div>
-
-                    @endforeach
-                    
+                    <h2 class="section-title mb-5" data-aos="fade-up">Please login to leave a reply</h2>
                     @if(!Auth::guest())
-                        <h2 class="section-title mb-5" data-aos="fade-up">Leave a Reply</h2>
+                        
                     
                         <form action="{{ route('comments.store') }}" method="post">
                             @csrf
@@ -78,6 +67,18 @@
                             </div>
                         </form>
                     @endif
+                    <h2 class="section-title mb-5" data-aos="fade-up">Comments</h2>
+                    @foreach ($movie->comments as $comment)
+                        <div class="card mb-2" data-aos="fade-up">
+                            
+                            <div class="card-body">
+                                <h5 class="card-title">{{ $comment->body }}</h5>
+                                <p class="card-text">{{ $comment->user->name }}</p>
+                            </div>
+                        </div>
+
+                    @endforeach
+                    
                 </section>
             </div>
         </div>

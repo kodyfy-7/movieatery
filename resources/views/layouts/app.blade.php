@@ -17,17 +17,14 @@
     <header class="edica-header">
         <div class="container">
             <nav class="navbar navbar-expand-lg navbar-light">
-                <a class="navbar-brand" href="index.html"><img src="{{ asset('front/assets/images/logo.svg') }}" alt="Edica"></a>
+                <a class="navbar-brand" href="{{ route('welcome') }}"><img src="{{ asset('front/assets/images/logo.svg') }}" alt="Edica"></a>
                 <button class="navbar-toggler d-lg-none" type="button" data-toggle="collapse" data-target="#edicaMainNav" aria-controls="collapsibleNavId" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="edicaMainNav">
                     <ul class="navbar-nav mx-auto mt-2 mt-lg-0">
                         <li class="nav-item active">
-                            <a class="nav-link" href="index.html">Home <span class="sr-only">(current)</span></a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="about.html">About</a>
+                            <a class="nav-link" href="{{ route('welcome') }}">Home <span class="sr-only">(current)</span></a>
                         </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="blogDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Categories</a>
@@ -38,23 +35,13 @@
                                 <a class="dropdown-item" href="blog.html"><strong>Show More</strong></a>
                             </div>
                         </li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="pagesDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Pages</a>
-                            <div class="dropdown-menu" aria-labelledby="pagesDropdown">
-                                <a class="dropdown-item" href="404.html">404</a>
-                                <a class="dropdown-item" href="coming-soon.html">Coming Soon</a>
-                            </div>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="contact.html">Contact</a>
-                        </li>
                     </ul>
                     <ul class="navbar-nav mt-2 mt-lg-0">
                         <li class="nav-item">
                             <a class="nav-link" href="#"><span class="flag-icon flag-icon-squared rounded-circle flag-icon-gb"></span> Eng</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">Download</a>
+                            <input type="text" placeholder="search" class="form-control">
                         </li>
                     </ul>
                 </div>
@@ -70,7 +57,7 @@
             @hasSection('sidebar')
                     <div class="col-md-4 sidebar" data-aos="fade-left">
                         <div class="widget widget-post-carousel">
-                            <h5 class="widget-title">Post Lists</h5>
+                            <h5 class="widget-title">Movie Lists</h5>
                             <div class="post-carousel">
                                 <div id="carouselId" class="carousel slide" data-ride="carousel">
                                     <ol class="carousel-indicators">
@@ -79,7 +66,20 @@
                                         <li data-target="#carouselId" data-slide-to="2"></li>
                                     </ol>
                                     <div class="carousel-inner" role="listbox">
+                                        @forelse ($posts as $post)
                                         <figure class="carousel-item active">
+                                            <img src="{{ $post->image }}" alt="First slide">
+                                            <figcaption class="post-title">
+                                                <a href="{{ route('movies.show', $post->id) }}">{{ $post->title }}</a>
+                                            </figcaption>
+                                        </figure>
+                                        @empty
+                                            <p>Coming soon</p>
+                                        @endforelse
+                                        {{-- @foreach ($categories as $category)
+                                            <a class="dropdown-item" href="">{{ $category->title }}</a>
+                                        @endforeach --}}
+                                        {{-- <figure class="carousel-item active">
                                             <img src="{{ asset('front/assets/images/blog_widget_carousel.jpg') }}" alt="First slide">
                                             <figcaption class="post-title">
                                                 <a href="#!">Front becomes an official Instagram Marketing Partner</a>
@@ -96,12 +96,12 @@
                                                 <figcaption class="post-title">
                                                     <a href="#!">Front becomes an official Instagram Marketing Partner</a>
                                                 </figcaption>
-                                        </div>
+                                        </div> --}}
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="widget widget-post-list">
+                        {{-- <div class="widget widget-post-list">
                             <h5 class="widget-title">Post List</h5>
                             <ul class="post-list">
                                 <li class="post">
@@ -141,7 +141,7 @@
                         <div class="widget">
                             <h5 class="widget-title">Categories</h5>
                             <img src="{{ asset('front/assets/images/blog_widget_categories.jpg') }}" alt="categories" class="w-100">
-                        </div>
+                        </div> --}}
                     </div>
                 </div>
  

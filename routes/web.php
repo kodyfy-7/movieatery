@@ -15,11 +15,12 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-// Route::get('/', [MovieController::class, 'index']);
+// 
 // Route::get('/create', [MovieController::class, 'create']);
 // Route::post('/', [MovieController::class, 'store']);
 
-Route::resource('movies', MovieController::class);
+Route::get('/', [MovieController::class, 'index'])->name('welcome');
+Route::resource('movies', MovieController::class)->except('index');
 Route::resource('comments', CommentController::class);
 
 Route::get('/testing', function () {
