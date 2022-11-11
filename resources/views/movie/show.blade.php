@@ -3,19 +3,9 @@
 {{-- <main class="blog-post"> 
     <div class="container"> --}}
         <h1 class="edica-page-title" data-aos="fade-up">{{  $movie->title  }}</h1>
-        <p class="edica-blog-post-meta" data-aos="fade-up" data-aos-delay="200">Written by {{  $movie->user->name  }} • {{ $movie->created_at->diffForHumans() }} • {{  $movie->category->title  }} • 4 Comments 
-            @if(!Auth::guest())
-                @if(Auth::user()->id == $movie->user_id)
-                • 
-                    <a href="/movies/{{$movie->id}}/edit" class="btn btn-default">Edit</a>
-                    • 
-                    <form action="{{ route('movies.destroy', $movie->id) }}" method="post" enctype="multipart/form-data">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="btn btn-default" data-aos="fade-up" data-aos-delay="300">Delete</button>
-                    </form>
-                @endif
-            @endif
+        <p class="edica-blog-post-meta" data-aos="fade-up" data-aos-delay="200">Written by {{  $movie->user->name  }} • {{ $movie->created_at->diffForHumans() }} • {{  $movie->category->title  }} • {{ count($movie->comments) }} 
+            {{ \Illuminate\Support\Str::plural('comment', count($movie->comments)) }}
+            
         </p>
         <section class="blog-post-featured-img" data-aos="fade-up" data-aos-delay="300">
             <img src="{{  $movie->image  }}" alt="featured image" class="w-100">
@@ -26,6 +16,18 @@
                     {!! $movie->body  !!}
                     
                 </div>
+                @if(!Auth::guest())
+                    @if(Auth::user()->id == $movie->user_id)
+                    • 
+                        <a href="/movies/{{$movie->id}}/edit" class="btn btn-default">Edit</a>
+                        • 
+                        <form action="{{ route('movies.destroy', $movie->id) }}" method="post" enctype="multipart/form-data">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-default" data-aos="fade-up" data-aos-delay="300">Delete</button>
+                        </form>
+                    @endif
+                @endif
             </div>
         </section>
         <div class="row">

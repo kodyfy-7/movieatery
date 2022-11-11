@@ -23,8 +23,9 @@ class MovieController extends Controller
      */
     public function index()
     {
-        $movies = Movie::orderBy('created_at', 'DESC')->get();
-        return view('movie.index', ['movies' => $movies]);
+        return view('movie.index', [
+            'movies' => Movie::latest()->filter(request(['tag', 'search']))->paginate(6)
+        ]);
     }
 
     /**
@@ -34,11 +35,11 @@ class MovieController extends Controller
      */
     public function create()
     {
-        $movie = new Movie();
-        $categories = Category::get();
+        // $movie = new Movie();
+        // $categories = Category::get();
         return view('movie.create', [
-            'movie' => $movie,
-            'categories' => $categories
+            'movie' => new Movie(),
+            'categories' => Category::get()
         ]);
     }
 
@@ -92,10 +93,11 @@ class MovieController extends Controller
         //return $movie;
         $related_posts = Movie::where('id', '<>', $movie->id)->where('category_id', '=', $movie->category_id)->inRandomOrder()->take(3)->get();
         $movie = Movie::with(['comments' => function($query){ $query->orderBy('created_at', 'DESC');} ])->whereId($movie->id)->first();
-        return view('movie.show', [
-            'movie' => $movie,
-            'related_posts' => $related_posts
-        ]);
+        return view('movie.show', ['movie' => $movie, 'related_posts' => $related_posts]);
+        // return view('movie.show', [
+        //     'movie' => Movie::where('id', '<>', $movie->id)->where('category_id', '=', $movie->category_id)->inRandomOrder()->take(3)->get(),
+        //     'related_posts' => Movie::with(['comments' => function($query){ $query->orderBy('created_at', 'DESC');} ])->whereId($movie->id)->first()
+        // ]);
     }
 
     /**

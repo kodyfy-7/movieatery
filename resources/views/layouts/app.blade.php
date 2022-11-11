@@ -37,11 +37,39 @@
                         </li>
                     </ul>
                     <ul class="navbar-nav mt-2 mt-lg-0">
-                        <li class="nav-item">
-                            <a class="nav-link" href="#"><span class="flag-icon flag-icon-squared rounded-circle flag-icon-gb"></span> Eng</a>
+                        <li class="nav-item dropdown">
+                            @guest
+                                <a class="nav-link dropdown-toggle" href="#" id="blogDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Account</a>
+                                <div class="dropdown-menu" aria-labelledby="blogDropdown">
+                                    @if (Route::has('login'))
+                                        <a class="dropdown-item" href="{{ route('login') }}">{{ __('Login') }}</a>
+                                    @endif
+
+                                    @if (Route::has('register'))
+                                        <a class="dropdown-item" href="{{ route('register') }}">{{ __('Register') }}</a>
+                                    @endif
+                                </div>
+                            @else
+                                <a class="nav-link dropdown-toggle" href="#" id="blogDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{ Auth::user()->name }}</a>
+                                <div class="dropdown-menu" aria-labelledby="blogDropdown">
+                                    <a class="dropdown-item" href="{{ route('logout') }}"
+                                       onclick="event.preventDefault();
+                                                     document.getElementById('logout-form').submit();">
+                                        {{ __('Logout') }}
+                                    </a>
+
+                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                                        @csrf
+                                    </form>
+                                </div>
+                            @endguest
                         </li>
                         <li class="nav-item">
-                            <input type="text" placeholder="search" class="form-control">
+                            <form action="/">
+                                @csrf
+                                <input type="text" placeholder="search" name="search" class="form-control">
+                                {{-- <button type="submit">Go</button> --}}
+                            </form>
                         </li>
                     </ul>
                 </div>

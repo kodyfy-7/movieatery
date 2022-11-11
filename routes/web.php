@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\MovieController;
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\SearchController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -20,6 +21,7 @@ use Illuminate\Support\Facades\Route;
 // Route::post('/', [MovieController::class, 'store']);
 
 Route::get('/', [MovieController::class, 'index'])->name('welcome');
+Route::post('/search', [SearchController::class, 'index'])->name('search');
 Route::resource('movies', MovieController::class)->except('index');
 Route::resource('comments', CommentController::class);
 

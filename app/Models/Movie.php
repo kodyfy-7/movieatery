@@ -13,6 +13,13 @@ class Movie extends Model
         'title', 'body', 'is_published', 'image', 'category_id', 'user_id', 'slug'
     ];
 
+    public function scopeFilter($query, array $filters) {
+        if($filters['search'] ?? false) {
+            $query->where('title', 'like', '%' . request('search') . '%');
+        }
+    }
+
+
     public function user()
     {
         return $this->belongsTo(User::class);
