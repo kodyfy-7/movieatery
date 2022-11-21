@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 use App\Models\Movie;
 use App\Http\Requests\StoreMovieRequest;
 use App\Http\Requests\UpdateMovieRequest;
+use App\Services\SlugService;
 use App\Models\Category;
 use App\Models\Comment;
 use Illuminate\Http\Request;
@@ -16,13 +17,18 @@ use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 
 class MovieController extends Controller
 {
+    public function __construct(SlugService $SlugService)
+    {
+        $this->SlugService = $SlugService;
+    }
+
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
     public function index()
-    {
+    { 
         return view('movie.index', [
             'movies' => Movie::latest()->filter(request(['tag', 'search']))->paginate(3)
         ]);/**/
@@ -49,38 +55,23 @@ class MovieController extends Controller
      * @param  \App\Http\Requests\StoreMovieRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreMovieRequest $request)
     {
-        $data = request()->validate([
-            'title' => ['required', 'string'],
-            'body' => ['required', 'string'],
-            'category' => ['required', 'integer'],
-            'publish' => [''],
-            'image' => ['']
-        ]); 
         $publish = $request->boolean('publish');
-        // if($request->publish)
-        // {
-        //     $publish = true;
-        // } else{
-        //     $publish = false;
-        // }
-
-        $slug = Str::slug($data['title']);
-        if(Movie::whereSlug($slug)->exists())
-        {
-            $slug = $slug .'-'. Str::uuid();
-        }
+        $title = $request->validated('title');
+        $model = new Movie();
+        $slug = $this->SlugService->generate($title, $model);
 
         if($request->has('image'))
         { 
             // Store the image on Cloudinary and return the secure URL
             $path = cloudinary()->upload($request->file('image')->getRealPath())->getSecurePath();
         }
+
         Movie::create([
-            'title' => $data['title'],
-            'body' => $data['body'],
-            'category_id' => $data['category'],
+            'title' => $request->validated('title'),
+            'body' => $request->validated('body'),
+            'category_id' => $request->validated('category'),
             'is_published' => $publish,
             'image' => $path,
             'user_id' => auth()->user()->id,
@@ -99,14 +90,9 @@ class MovieController extends Controller
      */
     public function show(Movie $movie)
     {
-        //return $movie;
         $related_posts = Movie::where('id', '<>', $movie->id)->where('category_id', '=', $movie->category_id)->inRandomOrder()->take(3)->get();
         $movie = Movie::with(['comments' => function($query){ $query->orderBy('created_at', 'DESC');} ])->whereId($movie->id)->first();
         return view('movie.show', ['movie' => $movie, 'related_posts' => $related_posts]);
-        // return view('movie.show', [
-        //     'movie' => Movie::where('id', '<>', $movie->id)->where('category_id', '=', $movie->category_id)->inRandomOrder()->take(3)->get(),
-        //     'related_posts' => Movie::with(['comments' => function($query){ $query->orderBy('created_at', 'DESC');} ])->whereId($movie->id)->first()
-        // ]);
     }
 
     /**
@@ -131,22 +117,23 @@ class MovieController extends Controller
      * @param  \App\Models\Movie  $movie
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Movie $movie)
+    public function update(UpdateMovieRequest $request, Movie $movie)
     {
-        $data = request()->validate([
-            'title' => ['required', 'string'],
-            'body' => ['required', 'string'],
-            'category' => ['required', 'integer'],
-            'image' => ['']
-        ]); 
+        // $data = request()->validate([
+        //     'title' => ['required', 'string'],
+        //     'body' => ['required', 'string'],
+        //     'category' => ['required', 'integer'],
+        //     'image' => ['']
+        // ]); 
 
-        if($movie->title != $data['title'])
+        $publish = $request->boolean('publish');
+        
+
+        if($movie->title != $request->validated('title'))
         {
-            $slug = Str::slug($data['title']);
-            if(Movie::whereSlug($slug)->exists())
-            {
-                $slug = $slug .'-'. Str::uuid();
-            }
+            $title = $request->validated('title');
+            $model = new Movie();
+            $slug = $this->SlugService->generate($title, $model);
         }
 
         if($request->has('image'))
@@ -157,9 +144,9 @@ class MovieController extends Controller
             $path = $movie->image;
         }
         Movie::whereId($movie->id)->update([
-            'title' => $data['title'],
-            'body' => $data['body'],
-            'category_id' => $data['category'],
+            'title' => $request->validated('title'),
+            'body' => $request->validated('body'),
+            'category_id' => $request->validated('category'),
             'is_published' => true,
             'image' => $path,
             'user_id' => 1,

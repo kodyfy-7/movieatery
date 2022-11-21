@@ -24,7 +24,10 @@ class UpdateMovieRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'title' => 'required', 'string',
+            'body' => 'required', 'string',
+            'category' => 'required', 'integer',
+            'image' => ''
         ];
     }
 }

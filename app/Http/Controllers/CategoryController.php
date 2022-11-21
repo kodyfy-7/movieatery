@@ -3,11 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Services\SlugService;
 use App\Http\Requests\StoreCategoryRequest;
 use App\Http\Requests\UpdateCategoryRequest;
+use Illuminate\Support\Str;
 
 class CategoryController extends Controller
 {
+    public function __construct(SlugService $SlugService)
+    {
+        $this->SlugService = $SlugService;
+    }
     /**
      * Display a listing of the resource.
      *
@@ -15,7 +21,9 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        //
+        return view('admin.category.index', [
+            'categories' => Category::latest()->get()
+        ]);
     }
 
     /**
@@ -25,7 +33,9 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        //
+        return view('admin.category.create', [
+            'category' => new Category(),
+        ]);
     }
 
     /**
@@ -36,7 +46,16 @@ class CategoryController extends Controller
      */
     public function store(StoreCategoryRequest $request)
     {
-        //
+        $title = $request->validated('title');
+        $model = new Category();
+        $slug = $this->SlugService->generate($title, $model);
+
+        Category::create([
+            'title' => $request->validated('title'),
+            'slug' => $slug
+        ]);
+
+        return redirect()->back()->with('success', 'Data created successfully.');
     }
 
     /**
@@ -58,7 +77,9 @@ class CategoryController extends Controller
      */
     public function edit(Category $category)
     {
-        //
+        return view('admin.category.edit', [
+            'category' => $category
+        ]);
     }
 
     /**
@@ -70,7 +91,16 @@ class CategoryController extends Controller
      */
     public function update(UpdateCategoryRequest $request, Category $category)
     {
-        //
+        $title = $request->validated('title');
+        $model = new Category();
+        $slug = $this->SlugService->generate($title, $model);
+        
+        Category::whereId($category->id)->update([
+            'title' => $request->validated('title'),
+            'slug' => $slug
+        ]);
+
+        return redirect()->back()->with('success', 'Data updated successfully.');
     }
 
     /**
